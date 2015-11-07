@@ -80,6 +80,12 @@ public class main
   };
 
   // Part f: simulation
+  /**
+   * Run a simulation of our LibraryBook system
+   * @param  bookStock      All the books our library has
+   * @param  numberOfEvents How many iterations to run the simulation for
+   * @return                Log of events that happened in the simulation
+   */
   private static String[] runSimulation(LibraryBook[] bookStock, int numberOfEvents)
   {
     int n = bookStock.length;
@@ -134,6 +140,10 @@ public class main
     return simulationLog;
   };
 
+  /**
+   * entry point
+   * @param args command line arguments, unused
+   */
   public static void main(String[] args)
   {
     LibraryBook[] bookStock = generateBookStock();

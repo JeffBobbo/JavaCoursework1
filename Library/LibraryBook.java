@@ -62,12 +62,18 @@ public class LibraryBook
     return true;
   };
 
+  /**
+   * If this LibraryBook has no status, mark it as reference only
+   */
   public void setAsReferenceOnly()
   {
     if (status == null)
       status = BookStatus.REFERENCE_ONLY;
   };
 
+  /**
+   * If this LibraryBook has no status, mark it as available for lending
+   */
   public void setAsForLending()
   {
     if (status == null)
@@ -84,7 +90,8 @@ public class LibraryBook
   };
 
   /**
-   * Checks if this book is for reference only (not stipulated in the assignment, but required for Part f).
+   * Checks if this book is for reference only
+   * (not stipulated in the assignment, but required for Part f).
    * @return  true if status == REFERENCE_ONLY
    */
   public boolean isReference()
@@ -93,6 +100,7 @@ public class LibraryBook
   };
   /**
    * Check if this book is on loan
+   * (not stipulated in the assignment, but required for Part f).
    * @return  true if status == ON_LOAN
    */
   public boolean isOnLoan()
@@ -116,6 +124,9 @@ public class LibraryBook
     return true;
   };
 
+  /**
+   * Marks this LibraryBook as being on loan
+   */
   public void borrowBook()
   {
     // if this book was reserved, we should reduce the reservation count
@@ -128,6 +139,10 @@ public class LibraryBook
     status = BookStatus.ON_LOAN; // set as on loan
   };
 
+  /**
+   * Returns the LibraryBook and sets it up for loan again
+   * If the book has been reserved, automatically takes it out on loan again
+   */
   public void returnBook()
   {
     onLoanCount--; // decrement how many books we're loaning
@@ -139,6 +154,10 @@ public class LibraryBook
       borrowBook();
   };
 
+  /**
+   * Convert this LibraryBook to a string
+   * @return String representation of this LibraryBook
+   */
   public String toString()
   {
     StringBuilder sb = new StringBuilder();
