@@ -1,0 +1,36 @@
+written Qs:
+
+a: yes
+b: no, unless function called United with variable called there_is_only_one (probably not)
+c: yes
+d: no
+e: yes
+f: no
+
+
+private static int totalTVs = 0;
+
+public Television()
+{
+  supplier = null;
+  code = null;
+  screenSize = 0;
+  type = null;
+};
+
+public Television(TelevisionManufacturer supplier, String code, int screenSize, String type)
+{
+  this.supplier = supplier;
+  this.code = code;
+  this.screenSize = screenSize;
+  this.type = type;
+}
+
+public int getScreenSize() { return screenSize; };
+
+public void setType(String type) { this.type = type; };
+
+public boolean producedBy(TelevisionManufacturer supplier)
+{
+  return this.supplier.equals(supplier);
+}
