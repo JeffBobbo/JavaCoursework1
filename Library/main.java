@@ -1,5 +1,10 @@
 import java.util.Random;
 
+/**
+ * Frame work to test the LibraryBook class
+ * {@link main#generateBookStock generateBookStock} generates some test data for us
+ * {@link main#runSimulation runSimulation} runs a test simulation for us
+ */
 public class main
 {
   /**
@@ -97,43 +102,50 @@ public class main
 
       // generate the start of our log
       StringBuilder log = new StringBuilder();
-      log.append(i).append(" ").append(book.getLoanCount()).append(" ").append(book.getClassification());
-
-      // now decide what event to run
-      if (book.getClassification().equals("----")) // kinda bad form, but then there's LibraryBook::toString to worry about.
+      if (book == null) // should never happen, but just in case
       {
-        book.setClassification("QA" + (99 - i));
-        log.append(" ").append("BOOK IS CLASSIFIED");
-      }
-      else if (book.isReference())
-      {
-        log.append(" ").append("REFERENCE ONLY BOOK");
-      }
-      else if (book.isOnLoan() == false)
-      {
-        book.borrowBook();
-        log.append(" ").append("BOOK IS LOANED OUT");
-      }
-      else if (book.isOnLoan() == true)
-      {
-        log.append(" ");
-        // decide if we want to return or place a reservation
-        if (random.nextBoolean())
-        {
-          book.returnBook();
-          log.append("BOOK IS RETURNED");
-        }
-        else
-        {
-          if (book.reserveBook())
-            log.append("RESERVATION PLACED FOR ON-LOAN BOOK");
-          else
-            log.append("BOOK IS ON-LOAN BUT CANNOT BE RESERVED");
-        }
+        log.append("BOOK IS NULL?!");
       }
       else
       {
-        log.append("SOMETHING REALLY BAD HAPPENED WITH THIS BOOK");
+        log.append(i).append(" ").append(book.getLoanCount()).append(" ").append(book.getClassification());
+
+        // now decide what event to run
+        if (book.getClassification().equals("----")) // kinda bad form, but then there's LibraryBook.toString to worry about.
+        {
+          book.setClassification("QA" + (99 - i));
+          log.append(" ").append("BOOK IS CLASSIFIED");
+        }
+        else if (book.isReference())
+        {
+          log.append(" ").append("REFERENCE ONLY BOOK");
+        }
+        else if (book.isOnLoan() == false)
+        {
+          book.borrowBook();
+          log.append(" ").append("BOOK IS LOANED OUT");
+        }
+        else if (book.isOnLoan() == true)
+        {
+          log.append(" ");
+          // decide if we want to return or place a reservation
+          if (random.nextBoolean())
+          {
+            book.returnBook();
+            log.append("BOOK IS RETURNED");
+          }
+          else
+          {
+            if (book.reserveBook())
+              log.append("RESERVATION PLACED FOR ON-LOAN BOOK");
+            else
+              log.append("BOOK IS ON-LOAN BUT CANNOT BE RESERVED");
+          }
+        }
+        else
+        {
+          log.append("SOMETHING WRONG WITH THIS BOOK:\n").append(book.toString());
+        }
       }
       simulationLog[i] = log.toString();
     }

@@ -21,27 +21,33 @@ public class LibraryBook
 
   // Part e: getter and setter methods
   /**
+   * Get the author of this LibraryBook
    * @return author of this LibraryBook
    */
   public String getAuthor() { return author; };
   /**
+   * Get the title of this LibraryBook
    * @return title of this LibraryBook
    */
   public String getTitle() { return title; };
   /**
+   * Get the classification of this LibraryBook, returns "----" if not set
    * @return classification code of this LibraryBook
    */
   public String getClassification()
   {
     if (classification == null)
       return "----"; // 3 hyphens in example, but I love me some monospace goodness
+    // this is actually pretty bad form, but it's this or doing two checks for it in toString and runSimulation
     return classification;
   };
   /**
+   * Get the page count of this LibraryBook
    * @return page count of this LibraryBook
    */
   public int getPages() { return pages; };
   /**
+   * Get the borrow count of this LibraryBook
    * @return borrow count of this LibraryBook
    */
   public int getBorrowCount() { return borrowCount; };

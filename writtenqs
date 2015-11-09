@@ -24,13 +24,14 @@ public Television(TelevisionManufacturer supplier, String code, int screenSize, 
   this.code = code;
   this.screenSize = screenSize;
   this.type = type;
+  totalTVs++;
 }
 
 public int getScreenSize() { return screenSize; };
 
 public void setType(String type) { this.type = type; };
 
-public boolean producedBy(TelevisionManufacturer supplier)
+public boolean isProducedBy(TelevisionManufacturer supplier)
 {
   return this.supplier.equals(supplier);
 }

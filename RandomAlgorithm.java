@@ -6,48 +6,153 @@
  */
 
 import java.util.Random;
+import java.util.Arrays; // Arrays.sort()
 
 public class RandomAlgorithm
 {
   /**
-   * Generates numbers in the range 0001..9998, excluding % 1111 ones
+   * How many digits to make
+   */
+  private static final int CODE_LENGTH = 4;
+
+  /**
+   * Generates numbers in the range 1..10^@{@link RandomAlgorithm.CODE_LENGTH CODE_LENGTH} - 2,
+   * excluding those with all the same digits
    * @return random number
    */
-  private static int generateDigits()
+  private static int[] generateDigits()
   {
+    final int goTo = (int)Math.pow(10, CODE_LENGTH) - 2; // calculate how far to go, then take two
+    int mod = 0; // calculate what isn't allowed
+    for (int i = 0; i < CODE_LENGTH; ++i)
+      mod += Math.pow(10, i);
+
+    // make our digits
     Random random = new Random();
     int digits = 0;
-    while (digits % 1111 == 0)
-      digits = random.nextInt(9998) + 1; // go 0..9997 then add 1 to get 1..9998
-    return digits;
+    while (digits % mod == 0)
+      digits = random.nextInt(goTo) + 1; // add one to get us in a range ignoring 0 and 10^CODE_LENGTH-1
+
+    // now convert our digits into an array for easy sorting
+    return makeArray(digits);
+  }
+
+  /**
+   * Create an array version of our digits for easier sorting
+   * @param  digits to convert
+   * @return        the converted array
+   */
+  private static int[] makeArray(int digits)
+  {
+    int[] ret = new int[CODE_LENGTH];
+    for (int i = 0; i < CODE_LENGTH; ++i)
+    {
+      final int mult = (int)Math.pow(10, (CODE_LENGTH - 1) - i); // do it in reverse, otherwise we make our array backwards
+      ret[i] = (digits / mult) % 10;
+    }
+    return ret;
+  }
+
+  /**
+   * Sort the digits using Arrays.sort() and then reconstruct our int to do maths
+   * @param  digits  array of digits to sort
+   * @param  reverse if true, reverse sort them
+   * @return         sorted digits as an integer
+   */
+  private static int sortDigits(int[] digits, boolean reverse)
+  {
+    Arrays.sort(digits);
+    // now 'join' them
+    int ret = 0;
+    for (int i = 0; i < CODE_LENGTH; ++i)
+    {
+      final int pow = reverse ? i : (CODE_LENGTH - 1) - i; // little voodoo ish,
+      // this makes it so we go in the right direction
+      final int mult = (int)Math.pow(10, pow);
+      ret += digits[i] * mult;
+    }
+    return ret;
+  }
+
+  /**
+   * Runs our algorithm
+   * @param  digits Initial set of digits to use
+   * @return        The final number we come to
+   */
+  public static int runAlgorithm(int[] digits)
+  {
+    int lastNumber = -1;
+    for (int i = 0; i < 10; ++i)
+    {
+      final int bigger = sortDigits(digits, true);
+      final int smaller = sortDigits(digits, false);
+
+      final int number = bigger - smaller;
+
+      System.out.printf("%0" + CODE_LENGTH + "d-%0" + CODE_LENGTH + "d=%0" + CODE_LENGTH + "d%n", bigger, smaller, number);
+      if (number == lastNumber)
+        break;
+      lastNumber = number;
+      digits = makeArray(number); // setup for next iteration
+    }
+    return lastNumber;
+  }
+
+  /**
+   * Runs a few simple tests to make sure everything is working as intended
+   * @return true if everything is good, false if stuff is broken
+   */
+  private static boolean runTests()
+  {
+    int[] ret = makeArray(6539);
+    // really lazy testing, but lazy testing better than no testing
+    if (ret[0] != 6 || ret[1] != 5 || ret[2] != 3 || ret[3] != 9)
+    {
+      System.out.print("TEST: makeArray(6539) failed\nGot: ");
+      for (int i = 0; i < ret.length; ++i)
+        System.out.print(ret[i]);
+      System.out.print("\n");
+      return false;
+    }
+
+    int asc = sortDigits(ret, false);
+    if (asc != 3569)
+    {
+      System.out.println("TEST: sortDigits({6, 5, 3, 9}, false) failed\nGot: " + asc);
+      return false;
+    }
+    int dsc = sortDigits(ret, true);
+    if (dsc != 9653)
+    {
+      System.out.println("TEST: sortDigits({6, 5, 3, 9}, true) failed\nGot: " + dsc);
+      return false;
+    }
+
+    return true;
   }
 
   /**
    * main
-   * @param args cli args
+   * @param cli args, use "tests" without quotes to run tests
    */
   public static void main(String[] args)
   {
-
-    int lastNumber = -1;
-    for (int i = 0; i < 10; ++i)
+    // maybe do some tests
+    boolean doTests = false;
+    for (String arg : args)
     {
-      // generate two sets of digits
-      final int d1 = generateDigits();
-      final int d2 = generateDigits();
-
-      // and now the two sets of numbers
-      final int bigger = d1 > d2 ? d1 : d2;
-      final int smaller = d1 > d2 ? d2 : d1;
-      // and work out our value
-      final int number = bigger - smaller;
-      // this could be a bit shorter: final int number = Math.abs(d1 - d2);
-      // but the assignment stipulates two variables, 'bigger' and 'smaller'.
-
-      System.out.printf("%04d-%04d=%04d%n", bigger, smaller, number);
-      if (number == lastNumber)
-        break;
-      lastNumber = number;
+      if (arg.equals("tests"))
+        doTests = true;
     }
+
+    if (doTests)
+    {
+      if (runTests())
+        System.out.println("All tests passed successfully");
+      return;
+    }
+
+    int[] digits = generateDigits(); // generate initial set of digits
+    runAlgorithm(digits); // run the algorithm
   }
 }
