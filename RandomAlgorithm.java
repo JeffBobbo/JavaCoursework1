@@ -20,7 +20,7 @@ public class RandomAlgorithm
    * excluding those with all the same digits
    * @return random number
    */
-  private static int[] generateDigits()
+  private static int generateDigits()
   {
     final int goTo = (int)Math.pow(10, CODE_LENGTH) - 2; // calculate how far to go, then take two
     int mod = 0; // calculate what isn't allowed
@@ -33,8 +33,7 @@ public class RandomAlgorithm
     while (digits % mod == 0)
       digits = random.nextInt(goTo) + 1; // add one to get us in a range ignoring 0 and 10^CODE_LENGTH-1
 
-    // now convert our digits into an array for easy sorting
-    return makeArray(digits);
+    return digits;
   }
 
   /**
@@ -108,23 +107,23 @@ public class RandomAlgorithm
     // really lazy testing, but lazy testing better than no testing
     if (ret[0] != 6 || ret[1] != 5 || ret[2] != 3 || ret[3] != 9)
     {
-      System.out.print("TEST: makeArray(6539) failed\nGot: ");
-      for (int i = 0; i < ret.length; ++i)
-        System.out.print(ret[i]);
-      System.out.print("\n");
+      System.out.print("TEST: makeArray(6539) failed\nGot: {" + ret[0]);
+      for (int i = 1; i < ret.length; ++i)
+        System.out.print(", " + ret[i]);
+      System.out.print("}, Expected: {6, 5, 3, 9}\n");
       return false;
     }
 
     int asc = sortDigits(ret, false);
     if (asc != 3569)
     {
-      System.out.println("TEST: sortDigits({6, 5, 3, 9}, false) failed\nGot: " + asc);
+      System.out.println("TEST: sortDigits({6, 5, 3, 9}, false) failed\nGot: " + asc + ", Expected: " + 3569);
       return false;
     }
     int dsc = sortDigits(ret, true);
     if (dsc != 9653)
     {
-      System.out.println("TEST: sortDigits({6, 5, 3, 9}, true) failed\nGot: " + dsc);
+      System.out.println("TEST: sortDigits({6, 5, 3, 9}, true) failed\nGot: " + dsc + ", Expected: " + 9653);
       return false;
     }
 
@@ -137,7 +136,7 @@ public class RandomAlgorithm
    */
   public static void main(String[] args)
   {
-    // maybe do some tests
+    // parse args
     boolean doTests = false;
     for (String arg : args)
     {
@@ -145,14 +144,16 @@ public class RandomAlgorithm
         doTests = true;
     }
 
+    // do tests?
     if (doTests)
     {
       if (runTests())
-        System.out.println("All tests passed successfully");
-      return;
+        System.out.println("All tests passed successfully\n");
+      else
+        return; // runTests() prints why they failed
     }
 
-    int[] digits = generateDigits(); // generate initial set of digits
+    int[] digits = makeArray(generateDigits()); // generate initial set of digits
     runAlgorithm(digits); // run the algorithm
   }
 }
